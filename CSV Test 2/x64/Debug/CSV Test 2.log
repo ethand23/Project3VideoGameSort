@@ -1,0 +1,4 @@
+﻿  CSV Test 2.cpp
+C:\Users\tyler\source\repos\CSV Parsing Software Project 3\CSV Test 2\csv.hpp(7828,28): warning C4244: '+=': conversion from 'double' to 'unsigned __int64', possible loss of data
+C:\Users\tyler\source\repos\CSV Parsing Software Project 3\CSV Test 2\csv.hpp(7832,23): warning C4244: '=': conversion from 'unsigned __int64' to 'int', possible loss of data
+  CSV Test 2.vcxproj -> C:\Users\tyler\source\repos\CSV Parsing Software Project 3\x64\Debug\CSV Test 2.exe
