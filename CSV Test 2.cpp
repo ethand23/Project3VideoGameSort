@@ -61,11 +61,11 @@ struct game {
         tags = _tags;
     }
 
-    game(){ //Default Constructor just in case
+    game() { //Default Constructor just in case
         appID = -1;
         name = "Not Provided";
     }
-   
+
     void display() {
         cout << "Steam App ID: " << appID << endl << "Name: " << name << endl << "Released: " << releaseDate << endl;   //Display all facts about the game
         cout << "Estimated Players: " << estimatedPlayers << endl << "Price: " << price << endl;
@@ -75,7 +75,7 @@ struct game {
         cout << "Total Achievements: " << achievements << endl << "Recommendations: " << recommendations << endl;
         cout << "Supported Languages: ";
         for (int i = 0; i < supportedLanguages.size(); i++) {   //Print Supported Languages
-            if (i != supportedLanguages.size()-1) {
+            if (i != supportedLanguages.size() - 1) {
                 cout << supportedLanguages.at(i) << ", ";
             }
             else {
@@ -92,7 +92,7 @@ struct game {
                 cout << developers.at(i) << endl;
             }
         }
-        
+
         cout << "Genres: ";
         for (int i = 0; i < genres.size(); i++) {   //Print Genres
             if (i != genres.size() - 1) {
@@ -102,7 +102,7 @@ struct game {
                 cout << genres.at(i) << endl;
             }
         }
-        
+
         cout << "Tags: ";
         for (int i = 0; i < tags.size(); i++) {   //Print Tags
             if (i != tags.size() - 1) {
@@ -135,7 +135,7 @@ game* insertGame(game* root, game* lastRoot, string _appID, string _name, string
 
     //Balancing
 
-    if (root->parent == nullptr) {
+    if (root->parent == nullptr) {//New root
         root->red = false;
         return root;
     }
@@ -182,7 +182,7 @@ game* insertGame(game* root, game* lastRoot, string _appID, string _name, string
 
 
     return root;
-    
+
 }
 
 void inOrderTraversal(game* root) {
@@ -190,6 +190,26 @@ void inOrderTraversal(game* root) {
         inOrderTraversal(root->leftChild);
         cout << root->appID << endl;
         inOrderTraversal(root->rightChild);
+    }
+}
+
+void createVector(string input, vector<string>* vect) {
+    for (int i = 0; i < 5; i++) {
+        if (i == 0 && input != "") {
+            string temp;
+            for (int j = 0; j < input.size(); j++) {
+                if (input.at(j) != ',') {
+                    temp += input.at(j);
+                }
+                else {
+                    vect->push_back(temp);
+                    temp.clear();
+                    if (input.at(j + 1) == ' ') {
+                        j++; // ignore the following space
+                    }
+                }
+            }
+        }
     }
 }
 
@@ -266,7 +286,7 @@ int main()
             }
             for (int k = 0; k < allLanguagesParsed.at(i).at(j).size(); k++) {
                 if (allLanguagesParsed.at(i).at(j).at(k) == '[' || allLanguagesParsed.at(i).at(j).at(k) == ']' || allLanguagesParsed.at(i).at(j).at(k) == '\'') { //Delete other characters
-                    allLanguagesParsed.at(i).at(j).erase(allLanguagesParsed.at(i).at(j).begin()+k);
+                    allLanguagesParsed.at(i).at(j).erase(allLanguagesParsed.at(i).at(j).begin() + k);
                     k--;
                 }
             }
@@ -316,7 +336,7 @@ int main()
 
     for (int i = 0; i < vectorOfAppIDs.size(); i++) { //Create all new game nodes
         //game* newGame = new game(vectorOfAppIDs.at(i), vectorOfNames.at(i), vectorOfReleaseDates.at(i), vectorOfEstimatedPlayers.at(i), vectorOfPrices.at(i), vectorOfDescriptions.at(i), vectorOfWindowsCompatibility.at(i), vectorOfMacCompatibility.at(i), vectorOfLinuxCompatibility.at(i), vectorOfPositiveReviews.at(i), vectorOfNegativeReviews.at(i), vectorOfAchievements.at(i), vectorOfRecommendations.at(i), allLanguagesParsed.at(i), allDevelopersParsed.at(i), allGenresParsed.at(i), allTagsParsed.at(i));
-        
+
         root = insertGame(root, headPointer, vectorOfAppIDs.at(i), vectorOfNames.at(i), vectorOfReleaseDates.at(i), vectorOfEstimatedPlayers.at(i), vectorOfPrices.at(i), vectorOfDescriptions.at(i), vectorOfWindowsCompatibility.at(i), vectorOfMacCompatibility.at(i), vectorOfLinuxCompatibility.at(i), vectorOfPositiveReviews.at(i), vectorOfNegativeReviews.at(i), vectorOfAchievements.at(i), vectorOfRecommendations.at(i), allLanguagesParsed.at(i), allDevelopersParsed.at(i), allGenresParsed.at(i), allTagsParsed.at(i));
     }
 
@@ -327,6 +347,67 @@ int main()
         cout << endl << endl;
     }
     */
+
+    // Input and display
+
+    vector<string> vLang, vSys, vGenre, vTag;
+    vector<game*> currGames; // Vector of currently displayed games for splay tree(?)
+
+    string language, achievement, system, genre, tag, input;
+    bool hasAchievements = true;
+
+    cout << "Welcome to Retro Recommend! Please respond to the following filter inquiries. Separate listed elements with a comma. (Ex.\"English, Spanish, French \") " << endl;
+
+    bool gameSearch = true;
+
+    while (gameSearch) {
+
+        cout << "Supported language(s)?: " << endl;
+        cin >> language;
+
+        cout << "Operating System(s)?: " << endl;
+        cin >> system;
+
+        cout << "Are there achievements in this game? Please enter (y) or yes, (n) or no: " << endl;
+        cin >> achievement;
+
+        if (achievement == "y" || "Y" || "yes" || "Yes") {
+            hasAchievements = true;
+        }
+        else if (achievement == "n" || "N" || "no" || "No")
+        {
+            hasAchievements = false;
+        }
+
+        cout << "Genre(s)?: " << endl;
+        cin >> genre;
+
+        cout << "Tag(s)?: " << endl;
+        cin >> tag;
+
+        createVector(language, &vLang);
+        createVector(system, &vSys);
+        createVector(genre, &vGenre);
+        createVector(tag, &vTag);
+
+        // TOD0 : Tree based functions
+
+
+        for (int i = 0; i < currGames.size(); i++) {
+            games.at(i)->display();
+            cout << endl << endl;
+        }
+
+        cout << "Would you like to continue? Please enter (y) or yes, (n) or no: " << endl;
+        cin >> input;
+
+        if (input == "n" || "no" || "No") {
+            gameSearch = false;
+            break;
+        }
+
+    }
+
     high_resolution_clock::time_point stop = high_resolution_clock::now(); //End timer and display run time
     duration<float> totalTime = duration_cast<duration<float>>(stop - start);
     cout << totalTime.count() << " seconds." << endl;
